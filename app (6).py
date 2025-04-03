@@ -31,8 +31,6 @@ Your tone must be encouraging, easy to understand, and beginner-friendly. Focus 
 
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 
-Always end your response with:
-Developed by **SuperAI labs**
 """
 
 # Function
@@ -66,4 +64,4 @@ if st.button("🔍 Translate"):
         st.warning("⚠️ Please enter a valid question.")
 
 st.markdown("---")
-st.markdown("<center><small>✨ Made with ❤️ to help you speak Kannada like a local!</small></center>", unsafe_allow_html=True)
+st.markdown("<center><small>✨ Made with ❤️ Developed by SuperAI labs 🤖 to help you speak Kannada like a local!</small></center>", unsafe_allow_html=True)
