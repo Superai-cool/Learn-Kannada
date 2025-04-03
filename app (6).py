@@ -81,7 +81,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ------------------ Load API Key ------------------
+# ------------------ Load OpenAI API Key ------------------
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("❌ OpenAI API key not found. Please set it in your Streamlit Cloud Secrets or local environment.")
@@ -92,22 +92,29 @@ openai.api_key = api_key
 def image_to_base64(img: Image.Image) -> str:
     buffered = BytesIO()
     img.save(buffered, format="PNG")
-    return base64.b64encode(buffered.getvalue()).decode()
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return img_str
 
 logo = Image.open("image.png")
 encoded_logo = image_to_base64(logo)
 
 # ------------------ App Header ------------------
-st.markdown(f"""
-<div class="centered-container">
-    <img src='data:image/png;base64,{encoded_logo}' width='100'>
-    <div class="title">Learn Kannada</div>
-    <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
-    <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.</div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    f"""
+    <div class="centered-container">
+        <img src='data:image/png;base64,{encoded_logo}' width='100'>
+        <div class="title">Learn Kannada</div>
+        <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
+        <div class="desc">
+            Ask anything in English (or your language) and get simple, step-by-step Kannada guidance<br>
+            to help you learn and speak with confidence.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-# ------------------ Prompt ------------------
+# ------------------ Prompt Logic ------------------
 LEARN_KANNADA_PROMPT = """
 You are "Learn Kannada" – a friendly assistant designed to help kids and beginners learn local, spoken Kannada step by step.
 
@@ -117,14 +124,15 @@ Respond using this five-part format:
 
 • **Transliteration (English):** Write pronunciation using English letters.
 
-• **Transliteration (Hindi Style):** Write the Kannada sentence using Hindi (Devanagari) script so a Hindi speaker can pronounce Kannada easily. This is not a Hindi translation.
+• **Transliteration (Hindi Style):** Convert the Kannada sentence into Hindi (Devanagari script) so a Hindi speaker can pronounce the Kannada sounds correctly. Do NOT repeat Kannada script or give Hindi meaning. Only give Hindi phonetic version.  
+  E.g., 'ನನಗೆ ನೀರು ಬೇಕು' → 'ननगे नीरु बेकु'
 
 • **Meaning / Context:** Explain the meaning in simple English.
 
 • **Example Sentence:** Show one full Kannada sentence with:
-    - Kannada script
-    - English transliteration
-    - Hindi-style transliteration
+    - Kannada script  
+    - English transliteration  
+    - Hindi-style transliteration  
     - Simple English meaning
 
 Speak like a friendly Kannada tutor helping a child or beginner. Avoid Hindi translation.
@@ -142,9 +150,16 @@ def get_kannada_response(query):
             temperature=0.7
         )
         content = response.choices[0].message.content.strip()
-        return f"### ✅ Your Kannada Learning Result\n\n{content}"
+
+        result = f"""
+### ✅ Your Kannada Learning Result
+
+{content}
+"""
+        return result
+
     except Exception as e:
-        st.error(f"❌ OpenAI Error:\n\n{e}")
+        st.error(f"❌ OpenAI API Error:\n\n{e}")
         return ""
 
 # ------------------ Input UI ------------------
@@ -152,11 +167,11 @@ st.markdown("<div class='custom-label'>💬 What would you like to learn in Kann
 
 query = st.text_area(
     label="",
-    placeholder="E.g., thank you, hello, I want food, Where is bus stop?",
+    placeholder="E.g., hello, thank you, I want water, milk, I'm hungry",
     height=140
 )
 
-# ------------------ Smart Query Fix ------------------
+# ------------------ Query Preprocessor ------------------
 def preprocess_query(q):
     q = q.lower().strip()
     if not q:
@@ -165,7 +180,7 @@ def preprocess_query(q):
         return q
     return f"How do I say '{q}' in Kannada?"
 
-# ------------------ Submit Button ------------------
+# ------------------ Button ------------------
 if st.button("📝 Tell me in Kannada"):
     if query.strip():
         cleaned_query = preprocess_query(query)
