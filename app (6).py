@@ -31,7 +31,7 @@ st.markdown("""
     }
     .stTextArea textarea {
         font-size: 16px;
-        padding: 10px;
+        padding: 12px;
         border-radius: 10px;
     }
     .centered-container {
@@ -39,19 +39,44 @@ st.markdown("""
         flex-direction: column;
         align-items: center;
         text-align: center;
-        margin-bottom: 20px;
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+    .title {
+        margin-top: 10px;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+    .subtitle {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-top: 5px;
+    }
+    .desc {
+        font-size: 1rem;
+        max-width: 600px;
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+    label[data-testid="stTextAreaLabel"] {
+        width: 100%;
+        text-align: center;
+        display: block;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 10px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# ------------------ Load API Key ------------------
+# ------------------ Load OpenAI API Key ------------------
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("❌ OpenAI API key not found. Please set it in your Streamlit Cloud Secrets or local environment.")
     st.stop()
 openai.api_key = api_key
 
-# ------------------ Embed Logo Dynamically ------------------
+# ------------------ Logo with Base64 ------------------
 def image_to_base64(img: Image.Image) -> str:
     buffered = BytesIO()
     img.save(buffered, format="PNG")
@@ -65,15 +90,15 @@ st.markdown(
     f"""
     <div class="centered-container">
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
-        <h1 style='margin-top: 10px;'>Learn Kannada</h1>
-        <h4>Your smart, beginner-friendly Kannada learning assistant!</h4>
-        <p style='max-width: 600px;'>Ask anything in English or your language, and get clear, structured Kannada learning in seconds.</p>
+        <div class="title">Learn Kannada</div>
+        <div class="subtitle">Your smart, beginner-friendly Kannada learning assistant!</div>
+        <div class="desc">Ask anything in English or your language, and get clear, structured Kannada learning in seconds.</div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# ------------------ Prompt ------------------
+# ------------------ GPT Prompt ------------------
 LEARN_KANNADA_PROMPT = """
 You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
 
@@ -88,7 +113,7 @@ Be friendly, encouraging, and clear. Do not include overly formal or classical K
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 """
 
-# ------------------ OpenAI Function ------------------
+# ------------------ Function to Get Response ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -105,14 +130,14 @@ def get_kannada_response(query):
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ Input Field ------------------
+# ------------------ Input Section ------------------
 query = st.text_area(
     "💬 What would you like to learn in Kannada?",
     placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
     height=140
 )
 
-# ------------------ Button ------------------
+# ------------------ Submit Button ------------------
 if st.button("🔍 Get Kannada Translation"):
     if query.strip():
         with st.spinner("Translating and formatting your answer..."):
