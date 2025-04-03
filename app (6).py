@@ -4,7 +4,7 @@ import os
 
 # ------------------ App Configuration ------------------
 st.set_page_config(
-    page_title="🗣️ Learn Kannada",
+    page_title="Learn Kannada",
     page_icon="🗣️",
     layout="centered"
 )
@@ -26,7 +26,7 @@ st.markdown("""
         font-weight: bold;
     }
     .stTextArea textarea {
-        font-size: 14px;
+        font-size: 16px;
         padding: 10px;
         border-radius: 10px;
     }
@@ -41,7 +41,8 @@ if not api_key:
 openai.api_key = api_key
 
 # ------------------ App Header ------------------
-st.title("🗣️ Learn Kannada")
+st.image("/mnt/data/image.png", width=100)
+st.title("Learn Kannada")
 st.markdown("""
 ##### Your smart, beginner-friendly Kannada learning assistant!
 Ask anything in English or your language, and get clear, structured Kannada learning in seconds.
