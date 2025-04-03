@@ -2,6 +2,8 @@ import streamlit as st
 import openai
 import os
 from PIL import Image
+import base64
+from io import BytesIO
 
 # ------------------ App Configuration ------------------
 st.set_page_config(
@@ -15,16 +17,17 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    html, body, [class*="css"]  {
+    html, body, [class*="css"] {
         font-family: 'Poppins', sans-serif;
     }
     .stButton>button {
-        background-color: #000000;
+        background-color: #4CAF50;
         color: white;
         font-size: 16px;
         border-radius: 10px;
         padding: 10px 24px;
         font-weight: bold;
+        width: 100%;
     }
     .stTextArea textarea {
         font-size: 16px;
@@ -34,18 +37,32 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ------------------ Load API Key ------------------
+# ------------------ Load OpenAI API Key ------------------
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("❌ OpenAI API key not found. Please set it in your Streamlit Cloud Secrets or local environment.")
     st.stop()
-
 openai.api_key = api_key
 
-# ------------------ App Header ------------------
-logo = Image.open("image.png")
-st.image(logo, width=100)
+# ------------------ Embed Logo Dynamically ------------------
+def image_to_base64(img: Image.Image) -> str:
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return img_str
 
+logo = Image.open("image.png")
+encoded_logo = image_to_base64(logo)
+st.markdown(
+    f"""
+    <div style='text-align: center; margin-bottom: -30px;'>
+        <img src='data:image/png;base64,{encoded_logo}' width='100'>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# ------------------ App Header ------------------
 st.title("Learn Kannada")
 st.markdown("""
 ##### Your smart, beginner-friendly Kannada learning assistant!  
@@ -67,7 +84,7 @@ Be friendly, encouraging, and clear. Do not include overly formal or classical K
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 """
 
-# ------------------ GPT Function ------------------
+# ------------------ OpenAI API Call ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -84,13 +101,14 @@ def get_kannada_response(query):
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ Main App UI ------------------
+# ------------------ User Input Area ------------------
 query = st.text_area(
     "💬 What would you like to learn in Kannada?",
     placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
     height=140
 )
 
+# ------------------ Submit Button ------------------
 if st.button("🔍 Get Kannada Translation"):
     if query.strip():
         with st.spinner("Translating and formatting your answer..."):
