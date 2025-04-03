@@ -104,7 +104,7 @@ st.markdown(
     <div class="centered-container">
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
         <div class="title">Learn Kannada</div>
-        <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
+        <div class="subtitle">Your Personal Coach for Easy Kannada Learning!</div>
         <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.
 
 </div>
@@ -113,11 +113,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ------------------ Prompt ------------------
+# ------------------ Updated Prompt ------------------
 LEARN_KANNADA_PROMPT = """
 You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
 
-Users can ask questions in any language, and you must respond using this consistent four-part format:
+Even if the user types broken or incomplete English such as:
+- "where is railway station in kannada"
+- "thank you meaning kannada"
+- "bus stop kannada word"
+
+You should understand they want a translation or help learning Kannada and respond clearly using this format:
 
 • **Kannada Translation:** Provide the correct modern, everyday Kannada word or sentence.  
 • **Transliteration:** Show the Kannada sentence using English phonetics.  
@@ -141,12 +146,14 @@ def get_kannada_response(query):
         )
         content = response.choices[0].message.content.strip()
 
-        # Beautify output
         result = f"""
 ### ✅ Your Kannada Learning Result
 
 {content}
 
+---
+
+Developed by **SuperAI Labs**
 """
         return result
 
@@ -154,7 +161,7 @@ def get_kannada_response(query):
         st.error(f"❌ OpenAI API Error:\n\n{e}")
         return ""
 
-# ------------------ Centered Input Label ------------------
+# ------------------ Input Section ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
@@ -163,11 +170,20 @@ query = st.text_area(
     height=140
 )
 
+# ------------------ Smart Query Fixer ------------------
+def preprocess_query(q):
+    q = q.lower().strip()
+    if "kannada" in q and not any(x in q for x in ["how", "say", "translate", "?"]):
+        core = q.replace("in kannada", "").strip(" ?.")
+        return f"How do I say '{core}' in Kannada?"
+    return q
+
 # ------------------ Submit Button ------------------
 if st.button("🔍 Get Kannada Translation"):
     if query.strip():
+        cleaned_query = preprocess_query(query)
         with st.spinner("Translating and formatting your answer..."):
-            response = get_kannada_response(query)
+            response = get_kannada_response(cleaned_query)
         if response:
             st.markdown(response)
     else:
