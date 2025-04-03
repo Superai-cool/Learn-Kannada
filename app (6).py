@@ -171,17 +171,22 @@ st.markdown("<div class='custom-label'>💬 What would you like to learn in Kann
 
 query = st.text_area(
     label="",
-    placeholder="E.g., How do I say 'Where is the toilet?' in Kannada?",
+    placeholder="E.g., thank you, I want water, play with me, bus stop",
     height=140
 )
 
 # ------------------ Smart Query Fixer ------------------
 def preprocess_query(q):
     q = q.lower().strip()
-    if "kannada" in q and not any(x in q for x in ["how", "say", "translate", "?"]):
-        core = q.replace("in kannada", "").strip(" ?.")
-        return f"How do I say '{core}' in Kannada?"
-    return q
+    if not q:
+        return ""
+    
+    # If already structured properly
+    if any(x in q for x in ["how", "say", "translate", "in kannada", "?"]):
+        return q
+    
+    # If user just types "hello" or "where is toilet"
+    return f"How do I say '{q}' in Kannada?"
 
 # ------------------ Submit Button ------------------
 if st.button("📝 Tell me in Kannada"):
