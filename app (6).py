@@ -104,8 +104,10 @@ st.markdown(
     <div class="centered-container">
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
         <div class="title">Learn Kannada</div>
-        <div class="subtitle">Your smart, beginner-friendly Kannada learning assistant!</div>
-        <div class="desc">Ask anything in English or your language, and get clear, structured Kannada learning in seconds.</div>
+        <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
+        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.
+
+</div>
     </div>
     """,
     unsafe_allow_html=True
@@ -166,7 +168,7 @@ st.markdown("<div class='custom-label'>💬 What would you like to learn in Kann
 
 query = st.text_area(
     label="",
-    placeholder="E.g., hello, thank you, I want water, toilet, I'm hungry",
+    placeholder="E.g., hello, thank you, I want water, milk, I'm hungry",
     height=140
 )
 
@@ -193,5 +195,5 @@ if st.button("📝 Tell me in Kannada"):
 # ------------------ Footer ------------------
 st.markdown("""
 ---
-<center><small>✨ Made with ❤️ to help you speak Kannada like a local!</small></center>
+<center><small>✨ Made with ❤️ Developed by SuperAI Labs to help you speak Kannada like a local!</small></center>
 """, unsafe_allow_html=True)
