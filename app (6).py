@@ -81,7 +81,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ------------------ Load OpenAI API Key ------------------
+# ------------------ Load API Key ------------------
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("❌ OpenAI API key not found. Please set it in your Streamlit Cloud Secrets or local environment.")
@@ -92,49 +92,42 @@ openai.api_key = api_key
 def image_to_base64(img: Image.Image) -> str:
     buffered = BytesIO()
     img.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode()
-    return img_str
+    return base64.b64encode(buffered.getvalue()).decode()
 
 logo = Image.open("image.png")
 encoded_logo = image_to_base64(logo)
 
 # ------------------ App Header ------------------
-st.markdown(
-    f"""
-    <div class="centered-container">
-        <img src='data:image/png;base64,{encoded_logo}' width='100'>
-        <div class="title">Learn Kannada</div>
-        <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
-        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.</div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown(f"""
+<div class="centered-container">
+    <img src='data:image/png;base64,{encoded_logo}' width='100'>
+    <div class="title">Learn Kannada</div>
+    <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
+    <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.</div>
+</div>
+""", unsafe_allow_html=True)
 
-# ------------------ Enhanced Prompt with Hindi Transliteration ------------------
+# ------------------ Prompt ------------------
 LEARN_KANNADA_PROMPT = """
-You are \"Learn Kannada\" – a friendly assistant designed to help kids and beginners learn local, spoken Kannada step by step.
+You are "Learn Kannada" – a friendly assistant designed to help kids and beginners learn local, spoken Kannada step by step.
 
-🟡 Always respond using this five-part format:
+Respond using this five-part format:
 
-• **Kannada Translation:** Provide the modern, everyday Kannada word or sentence.
+• **Kannada Translation:** Provide the correct modern Kannada sentence.
 
-• **Transliteration (English):** Show pronunciation using English letters.
+• **Transliteration (English):** Write pronunciation using English letters.
 
-• **Transliteration (Hindi Style):** Write the Kannada sentence using Devanagari (Hindi-style pronunciation). This helps Hindi speakers read Kannada sounds easily.
+• **Transliteration (Hindi Style):** Write the Kannada sentence using Hindi (Devanagari) script so a Hindi speaker can pronounce Kannada easily. This is not a Hindi translation.
 
-• **Meaning / Context:** Explain the meaning in very simple English.
+• **Meaning / Context:** Explain the meaning in simple English.
 
-• **Example Sentence:** Provide a short, real-life Kannada sentence. Include:
-  - Kannada script  
-  - English transliteration  
-  - Hindi-style transliteration (Devanagari)  
-  - English translation
+• **Example Sentence:** Show one full Kannada sentence with:
+    - Kannada script
+    - English transliteration
+    - Hindi-style transliteration
+    - Simple English meaning
 
-Speak like a local tutor teaching a child. Always use clear, friendly, beginner-level Kannada. Avoid overly formal or classical language.
-
-If the user types something unrelated to Kannada learning, reply gently:
-\"Let’s keep learning Kannada together! Ask me anything you want to say in Kannada.\"
+Speak like a friendly Kannada tutor helping a child or beginner. Avoid Hindi translation.
 """
 
 # ------------------ GPT Call ------------------
@@ -149,16 +142,9 @@ def get_kannada_response(query):
             temperature=0.7
         )
         content = response.choices[0].message.content.strip()
-
-        result = f"""
-### ✅ Your Kannada Learning Result
-
-{content}
-"""
-        return result
-
+        return f"### ✅ Your Kannada Learning Result\n\n{content}"
     except Exception as e:
-        st.error(f"❌ OpenAI API Error:\n\n{e}")
+        st.error(f"❌ OpenAI Error:\n\n{e}")
         return ""
 
 # ------------------ Input UI ------------------
@@ -166,11 +152,11 @@ st.markdown("<div class='custom-label'>💬 What would you like to learn in Kann
 
 query = st.text_area(
     label="",
-    placeholder="E.g., hello, thank you, I want water, milk, I'm hungry",
+    placeholder="E.g., thank you, hello, I want food, Where is bus stop?",
     height=140
 )
 
-# ------------------ Query Preprocessor ------------------
+# ------------------ Smart Query Fix ------------------
 def preprocess_query(q):
     q = q.lower().strip()
     if not q:
@@ -179,7 +165,7 @@ def preprocess_query(q):
         return q
     return f"How do I say '{q}' in Kannada?"
 
-# ------------------ Button ------------------
+# ------------------ Submit Button ------------------
 if st.button("📝 Tell me in Kannada"):
     if query.strip():
         cleaned_query = preprocess_query(query)
