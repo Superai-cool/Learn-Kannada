@@ -26,13 +26,14 @@ st.markdown("""
         padding-top: 1rem !important;
     }
     .stButton>button {
-        background-color: #000000;
-        color: white;
+        background-color: #4CAF50 !important;
+        color: white !important;
         font-size: 16px;
         border-radius: 10px;
         padding: 10px 24px;
         font-weight: bold;
         width: 100%;
+        border: none;
     }
     .stTextArea textarea {
         font-size: 16px;
@@ -100,10 +101,8 @@ st.markdown(
     <div class="centered-container">
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
         <div class="title">Learn Kannada</div>
-        <div class="subtitle">Your Personal Tutor for Easy Kannada Learning</div>
-        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.
-
-</div>
+        <div class="subtitle">Your smart, beginner-friendly Kannada learning assistant!</div>
+        <div class="desc">Ask anything in English or your language, and get clear, structured Kannada learning in seconds.</div>
     </div>
     """,
     unsafe_allow_html=True
@@ -139,9 +138,10 @@ def get_kannada_response(query):
         result += "\n\n---\nDeveloped by **SuperAI Labs**"
         return result
     except Exception as e:
-        return f"❌ OpenAI Error: {e}"
+        st.error(f"❌ OpenAI API Error:\n\n{e}")
+        return ""
 
-# ------------------ Centered Input Label ------------------
+# ------------------ Input Label ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
@@ -155,8 +155,9 @@ if st.button("🔍 Get Kannada Translation"):
     if query.strip():
         with st.spinner("Translating and formatting your answer..."):
             response = get_kannada_response(query)
-        st.markdown("### ✅ Your Kannada Learning Result")
-        st.markdown(response)
+        if response:
+            st.markdown("### ✅ Your Kannada Learning Result")
+            st.markdown(response)
     else:
         st.warning("⚠️ Please enter a valid question.")
 
