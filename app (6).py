@@ -19,7 +19,7 @@ st.markdown("""
         font-family: 'Poppins', sans-serif;
     }
     .stButton>button {
-        background-color: #4CAF50;
+        background-color: #000000;
         color: white;
         font-size: 16px;
         border-radius: 10px;
