@@ -58,14 +58,6 @@ st.markdown("""
         margin-top: 10px;
         margin-bottom: 30px;
     }
-    label[data-testid="stTextAreaLabel"] {
-        width: 100%;
-        text-align: center;
-        display: block;
-        font-size: 1rem;
-        font-weight: 500;
-        margin-bottom: 10px;
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -76,7 +68,7 @@ if not api_key:
     st.stop()
 openai.api_key = api_key
 
-# ------------------ Logo with Base64 ------------------
+# ------------------ Embed Logo ------------------
 def image_to_base64(img: Image.Image) -> str:
     buffered = BytesIO()
     img.save(buffered, format="PNG")
@@ -113,7 +105,7 @@ Be friendly, encouraging, and clear. Do not include overly formal or classical K
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 """
 
-# ------------------ Function to Get Response ------------------
+# ------------------ GPT Function ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -130,9 +122,11 @@ def get_kannada_response(query):
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ Input Section ------------------
+# ------------------ Centered Label & TextArea ------------------
+st.markdown("<div style='text-align:center; font-weight:500; font-size:1rem; margin-bottom:10px;'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
+
 query = st.text_area(
-    "💬 What would you like to learn in Kannada?",
+    label="",  # Hide default label
     placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
     height=140
 )
