@@ -32,7 +32,7 @@ Your tone must be encouraging, easy to understand, and beginner-friendly. Focus 
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 
 Always end your response with:
-Powered by WROGN Men Watches | [Buy Now](https://web.lehlah.club/s/gld8o5)
+Developed by **SuperAI labs**
 """
 
 # Function
