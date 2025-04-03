@@ -111,35 +111,30 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ------------------ Prompt for Kids/Beginners ------------------
+# ------------------ Enhanced Prompt for Hindi Transliteration ------------------
 LEARN_KANNADA_PROMPT = """
-You are "Learn Kannada" – a friendly assistant designed to help **kids and beginners** learn local, spoken Kannada step by step.
+You are "Learn Kannada" – a friendly assistant designed to help kids and beginners learn local, spoken Kannada step by step.
 
-Your tone must always be **simple, cheerful, and beginner-friendly**.
+🟡 Always respond using this five-part format:
 
-🟡 Always respond using this four-part format:
+• **Kannada Translation:** Provide the modern, everyday Kannada word or sentence.
 
-• **Kannada Translation:** Give the correct, modern Kannada sentence or word that people use in daily life. Use **easy words** that kids or absolute beginners can say and remember.
+• **Transliteration (English):** Show pronunciation using English letters.
 
-• **Transliteration:** Show how to pronounce the Kannada sentence using **English letters** (phonetics). Keep it simple and easy to read.
+• **Transliteration (Hindi Style):** Write the Kannada sentence using Devanagari (Hindi-style pronunciation). This helps Hindi speakers read Kannada sounds easily.
 
-• **Meaning / Context:** Explain the meaning in **very simple English** (or the user's language), so even a child can understand it.
+• **Meaning / Context:** Explain the meaning in very simple English.
 
-• **Example Sentence:** Give one short, **real-life Kannada sentence** with:
-    - Kannada script  
-    - Transliteration  
-    - Simple English meaning
+• **Example Sentence:** Provide a short, real-life Kannada sentence. Include:
+  - Kannada script  
+  - English transliteration  
+  - Hindi-style transliteration  
+  - English translation
 
-🧠 Important:
-- Avoid long or difficult Kannada.
-- Never use formal or old-style Kannada.
-- Use words helpful for school, play, talking to friends, travel, or asking for help.
-- Speak like a **friendly local tutor** teaching a child.
+Speak like a local tutor teaching a child. Always use clear, friendly, beginner-level Kannada. Avoid overly formal or classical language.
 
-🚫 If the question is not related to learning Kannada, gently say:
-“Let’s keep learning Kannada together! Ask me anything you want to say in Kannada.”
-
-Respond in a way that makes **kids feel excited and confident** to speak!
+If the user types something unrelated to Kannada learning, reply gently:
+"Let’s keep learning Kannada together! Ask me anything you want to say in Kannada."
 """
 
 # ------------------ GPT Call ------------------
@@ -166,29 +161,25 @@ def get_kannada_response(query):
         st.error(f"❌ OpenAI API Error:\n\n{e}")
         return ""
 
-# ------------------ Centered Input Label ------------------
+# ------------------ Input UI ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
     label="",
-    placeholder="E.g., thank you, I want water, play with me, bus stop",
+    placeholder="E.g., hello, thank you, I want water, toilet, I'm hungry",
     height=140
 )
 
-# ------------------ Smart Query Fixer ------------------
+# ------------------ Query Preprocessor ------------------
 def preprocess_query(q):
     q = q.lower().strip()
     if not q:
         return ""
-    
-    # If already structured properly
     if any(x in q for x in ["how", "say", "translate", "in kannada", "?"]):
         return q
-    
-    # If user just types "hello" or "where is toilet"
     return f"How do I say '{q}' in Kannada?"
 
-# ------------------ Submit Button ------------------
+# ------------------ Button ------------------
 if st.button("📝 Tell me in Kannada"):
     if query.strip():
         cleaned_query = preprocess_query(query)
