@@ -41,7 +41,7 @@ if not api_key:
 openai.api_key = api_key
 
 # ------------------ App Header ------------------
-st.image("/mnt/data/image.png", width=100)
+st.image("https://raw.githubusercontent.com/shripanditji/streamlit-assets/main/learn-kannada-logo.png", width=100)
 st.title("Learn Kannada")
 st.markdown("""
 ##### Your smart, beginner-friendly Kannada learning assistant!
