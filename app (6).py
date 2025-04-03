@@ -1,6 +1,7 @@
 import streamlit as st
 import openai
 import os
+from PIL import Image
 
 # ------------------ App Configuration ------------------
 st.set_page_config(
@@ -38,32 +39,35 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("❌ OpenAI API key not found. Please set it in your Streamlit Cloud Secrets or local environment.")
     st.stop()
+
 openai.api_key = api_key
 
 # ------------------ App Header ------------------
-st.image("https://raw.githubusercontent.com/shripanditji/streamlit-assets/main/learn-kannada-logo.png", width=100)
+logo = Image.open("image.png")
+st.image(logo, width=100)
+
 st.title("Learn Kannada")
 st.markdown("""
-##### Your smart, beginner-friendly Kannada learning assistant!
+##### Your smart, beginner-friendly Kannada learning assistant!  
 Ask anything in English or your language, and get clear, structured Kannada learning in seconds.
 """)
 
-# ------------------ Prompt ------------------
+# ------------------ GPT Prompt ------------------
 LEARN_KANNADA_PROMPT = """
-You are \"Learn Kannada\" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
+You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
 
 Users can ask questions in any language, and you must respond using this consistent four-part format:
 
-• **Kannada Translation** – Provide the correct modern, everyday Kannada word or sentence.
-• **Transliteration** – Show the Kannada sentence using English phonetics.
-• **Meaning/Context** – Explain the meaning in simple terms using user's input language.
-• **Example Sentence** – Include a realistic, locally used sentence in Kannada with transliteration and English meaning.
+• **Kannada Translation** – Provide the correct modern, everyday Kannada word or sentence.  
+• **Transliteration** – Show the Kannada sentence using English phonetics.  
+• **Meaning/Context** – Explain the meaning in simple terms using user's input language.  
+• **Example Sentence** – Include a realistic, locally used sentence in Kannada with transliteration and English meaning.  
 
-Be friendly, encouraging, and clear. Do not include overly formal or classical Kannada.
+Be friendly, encouraging, and clear. Do not include overly formal or classical Kannada.  
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 """
 
-# ------------------ Function ------------------
+# ------------------ GPT Function ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -75,12 +79,12 @@ def get_kannada_response(query):
             temperature=0.7
         )
         result = response.choices[0].message.content.strip()
-        result += "\n\n---\nDeveloped by **SuperAI labs**"
+        result += "\n\n---\nDeveloped by **SuperAI Labs**"
         return result
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ App Body ------------------
+# ------------------ Main App UI ------------------
 query = st.text_area(
     "💬 What would you like to learn in Kannada?",
     placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
