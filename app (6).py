@@ -145,9 +145,6 @@ def get_kannada_response(query):
 
 {content}
 
----
-
-Developed by **SuperAI Labs**
 """
         return result
 
