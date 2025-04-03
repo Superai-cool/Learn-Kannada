@@ -75,6 +75,9 @@ st.markdown("""
         margin-bottom: 10px;
         margin-top: -10px;
     }
+    .markdown-text-container p {
+        margin-bottom: 10px !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -114,10 +117,10 @@ You are "Learn Kannada" – a custom GPT designed to help users learn local, con
 
 Users can ask questions in any language, and you must respond using this consistent four-part format:
 
-• **Kannada Translation** – Provide the correct modern, everyday Kannada word or sentence.  
-• **Transliteration** – Show the Kannada sentence using English phonetics.  
-• **Meaning/Context** – Explain the meaning in simple terms using user's input language.  
-• **Example Sentence** – Include a realistic, locally used sentence in Kannada with transliteration and English meaning.  
+• **Kannada Translation:** Provide the correct modern, everyday Kannada word or sentence.  
+• **Transliteration:** Show the Kannada sentence using English phonetics.  
+• **Meaning / Context:** Explain the meaning in simple terms using user's input language.  
+• **Example Sentence:** Include a realistic, locally used sentence in Kannada with transliteration and English meaning.  
 
 Be friendly, encouraging, and clear. Do not include overly formal or classical Kannada.  
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
@@ -134,14 +137,25 @@ def get_kannada_response(query):
             ],
             temperature=0.7
         )
-        result = response.choices[0].message.content.strip()
-        result += "\n\n---\nDeveloped by **SuperAI Labs**"
+        content = response.choices[0].message.content.strip()
+
+        # Beautify output
+        result = f"""
+### ✅ Your Kannada Learning Result
+
+{content}
+
+---
+
+Developed by **SuperAI Labs**
+"""
         return result
+
     except Exception as e:
         st.error(f"❌ OpenAI API Error:\n\n{e}")
         return ""
 
-# ------------------ Input Label ------------------
+# ------------------ Centered Input Label ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
@@ -156,7 +170,6 @@ if st.button("🔍 Get Kannada Translation"):
         with st.spinner("Translating and formatting your answer..."):
             response = get_kannada_response(query)
         if response:
-            st.markdown("### ✅ Your Kannada Learning Result")
             st.markdown(response)
     else:
         st.warning("⚠️ Please enter a valid question.")
