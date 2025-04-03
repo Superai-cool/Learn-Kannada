@@ -100,8 +100,10 @@ st.markdown(
     <div class="centered-container">
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
         <div class="title">Learn Kannada</div>
-        <div class="subtitle">Your smart, beginner-friendly Kannada learning assistant!</div>
-        <div class="desc">Ask anything in English or your language, and get clear, structured Kannada learning in seconds.</div>
+        <div class="subtitle">Your Personal Tutor for Easy Kannada Learning</div>
+        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.
+
+</div>
     </div>
     """,
     unsafe_allow_html=True
