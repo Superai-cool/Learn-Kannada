@@ -138,7 +138,7 @@ If the user types something unrelated to Kannada learning, reply gently:
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": LEARN_KANNADA_PROMPT},
                 {"role": "user", "content": query.strip()}
