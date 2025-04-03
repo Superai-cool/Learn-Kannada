@@ -184,7 +184,7 @@ def preprocess_query(q):
     return q
 
 # ------------------ Submit Button ------------------
-if st.button("🔍 Get Kannada Translation"):
+if st.button("🔍 Tell me in Kannada"):
     if query.strip():
         cleaned_query = preprocess_query(query)
         with st.spinner("Translating and formatting your answer..."):
