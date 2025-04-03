@@ -40,23 +40,31 @@ st.markdown("""
         align-items: center;
         text-align: center;
         margin-top: 30px;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
+        padding: 0 5%;
     }
     .title {
-        margin-top: 10px;
+        margin-top: 15px;
         font-size: 2.2rem;
         font-weight: 700;
     }
     .subtitle {
         font-size: 1.1rem;
         font-weight: 500;
-        margin-top: 5px;
+        margin-top: 8px;
     }
     .desc {
         font-size: 1rem;
         max-width: 600px;
         margin-top: 10px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
+    }
+    .custom-label {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+        margin-top: -10px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -90,7 +98,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ------------------ GPT Prompt ------------------
+# ------------------ Prompt Setup ------------------
 LEARN_KANNADA_PROMPT = """
 You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
 
@@ -105,7 +113,7 @@ Be friendly, encouraging, and clear. Do not include overly formal or classical K
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 """
 
-# ------------------ GPT Function ------------------
+# ------------------ API Call ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -122,16 +130,16 @@ def get_kannada_response(query):
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ Centered Label & TextArea ------------------
-st.markdown("<div style='text-align:center; font-weight:500; font-size:1rem; margin-bottom:10px;'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
+# ------------------ Centered Input Label ------------------
+st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
-    label="",  # Hide default label
+    label="",
     placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
     height=140
 )
 
-# ------------------ Submit Button ------------------
+# ------------------ Button ------------------
 if st.button("🔍 Get Kannada Translation"):
     if query.strip():
         with st.spinner("Translating and formatting your answer..."):
