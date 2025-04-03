@@ -19,6 +19,11 @@ st.markdown("""
 
     html, body, [class*="css"] {
         font-family: 'Poppins', sans-serif;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    section.main > div {
+        padding-top: 1rem !important;
     }
     .stButton>button {
         background-color: #4CAF50;
@@ -42,7 +47,7 @@ st.markdown("""
         flex-direction: column;
         align-items: center;
         text-align: center;
-        margin-top: 30px;
+        margin-top: 10px;
         margin-bottom: 10px;
         padding: 0 5%;
     }
