@@ -34,6 +34,9 @@ st.markdown("""
         padding: 12px;
         border-radius: 10px;
     }
+    .stTextArea {
+        margin-bottom: -10px;
+    }
     .centered-container {
         display: flex;
         flex-direction: column;
@@ -63,8 +66,8 @@ st.markdown("""
         text-align: center;
         font-size: 1rem;
         font-weight: 500;
-        margin-bottom: 12px;
-        margin-top: -5px;
+        margin-bottom: 10px;
+        margin-top: -10px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -76,7 +79,7 @@ if not api_key:
     st.stop()
 openai.api_key = api_key
 
-# ------------------ Logo as Base64 ------------------
+# ------------------ Embed Logo ------------------
 def image_to_base64(img: Image.Image) -> str:
     buffered = BytesIO()
     img.save(buffered, format="PNG")
@@ -131,7 +134,7 @@ def get_kannada_response(query):
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ Centered Input Prompt ------------------
+# ------------------ Centered Input Label ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
