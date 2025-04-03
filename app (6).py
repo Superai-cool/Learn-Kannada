@@ -26,7 +26,7 @@ st.markdown("""
         padding-top: 1rem !important;
     }
     .stButton>button {
-        background-color: #4CAF50 !important;
+        background-color: #000000 !important;
         color: white !important;
         font-size: 16px;
         border-radius: 10px;
@@ -104,33 +104,42 @@ st.markdown(
     <div class="centered-container">
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
         <div class="title">Learn Kannada</div>
-        <div class="subtitle">Your Personal Coach for Easy Kannada Learning!</div>
-        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.
-
-</div>
+        <div class="subtitle">Your smart, beginner-friendly Kannada learning assistant!</div>
+        <div class="desc">Ask anything in English or your language, and get clear, structured Kannada learning in seconds.</div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# ------------------ Updated Prompt ------------------
+# ------------------ Prompt for Kids/Beginners ------------------
 LEARN_KANNADA_PROMPT = """
-You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
+You are "Learn Kannada" – a friendly assistant designed to help **kids and beginners** learn local, spoken Kannada step by step.
 
-Even if the user types broken or incomplete English such as:
-- "where is railway station in kannada"
-- "thank you meaning kannada"
-- "bus stop kannada word"
+Your tone must always be **simple, cheerful, and beginner-friendly**.
 
-You should understand they want a translation or help learning Kannada and respond clearly using this format:
+🟡 Always respond using this four-part format:
 
-• **Kannada Translation:** Provide the correct modern, everyday Kannada word or sentence.  
-• **Transliteration:** Show the Kannada sentence using English phonetics.  
-• **Meaning / Context:** Explain the meaning in simple terms using user's input language.  
-• **Example Sentence:** Include a realistic, locally used sentence in Kannada with transliteration and English meaning.  
+• **Kannada Translation:** Give the correct, modern Kannada sentence or word that people use in daily life. Use **easy words** that kids or absolute beginners can say and remember.
 
-Be friendly, encouraging, and clear. Do not include overly formal or classical Kannada.  
-If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
+• **Transliteration:** Show how to pronounce the Kannada sentence using **English letters** (phonetics). Keep it simple and easy to read.
+
+• **Meaning / Context:** Explain the meaning in **very simple English** (or the user's language), so even a child can understand it.
+
+• **Example Sentence:** Give one short, **real-life Kannada sentence** with:
+    - Kannada script  
+    - Transliteration  
+    - Simple English meaning
+
+🧠 Important:
+- Avoid long or difficult Kannada.
+- Never use formal or old-style Kannada.
+- Use words helpful for school, play, talking to friends, travel, or asking for help.
+- Speak like a **friendly local tutor** teaching a child.
+
+🚫 If the question is not related to learning Kannada, gently say:
+“Let’s keep learning Kannada together! Ask me anything you want to say in Kannada.”
+
+Respond in a way that makes **kids feel excited and confident** to speak!
 """
 
 # ------------------ GPT Call ------------------
@@ -150,7 +159,6 @@ def get_kannada_response(query):
 ### ✅ Your Kannada Learning Result
 
 {content}
-
 """
         return result
 
@@ -158,12 +166,12 @@ def get_kannada_response(query):
         st.error(f"❌ OpenAI API Error:\n\n{e}")
         return ""
 
-# ------------------ Input Section ------------------
+# ------------------ Centered Input Label ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
     label="",
-    placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
+    placeholder="E.g., How do I say 'Where is the toilet?' in Kannada?",
     height=140
 )
 
@@ -189,5 +197,5 @@ if st.button("🔍 Get Kannada Translation"):
 # ------------------ Footer ------------------
 st.markdown("""
 ---
-<center><small>✨ Made with ❤️ by SuperAI Labs to help you speak Kannada like a local!</small></center>
+<center><small>✨ Made with ❤️ to help you speak Kannada like a local!</small></center>
 """, unsafe_allow_html=True)
