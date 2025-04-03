@@ -2,38 +2,71 @@ import streamlit as st
 import openai
 import os
 
-# Page setup
-st.set_page_config(page_title="Learn Kannada", page_icon="🗣️", layout="centered")
+# ------------------ App Configuration ------------------
+st.set_page_config(
+    page_title="🗣️ Learn Kannada",
+    page_icon="🗣️",
+    layout="centered"
+)
 
-# Load OpenAI API key from environment
+# ------------------ Styling ------------------
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-size: 16px;
+        border-radius: 10px;
+        padding: 10px 24px;
+        font-weight: bold;
+    }
+    .stTextArea textarea {
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# ------------------ Load API Key ------------------
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("❌ OpenAI API key not found. Please set it in your Streamlit Cloud Secrets or local environment.")
     st.stop()
-
 openai.api_key = api_key
 
-# Prompt
+# ------------------ App Header ------------------
+st.image("https://cdn-icons-png.flaticon.com/512/2273/2273172.png", width=90)
+st.title("🗣️ Learn Kannada")
+st.markdown("""
+##### Your smart, beginner-friendly Kannada learning assistant!
+Ask anything in English or your language, and get clear, structured Kannada learning in seconds.
+""")
+
+# ------------------ Prompt ------------------
 LEARN_KANNADA_PROMPT = """
-You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
+You are \"Learn Kannada\" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
 
 Users can ask questions in any language, and you must respond using this consistent four-part format:
 
-Kannada Translation – Provide the correct modern, everyday Kannada word or sentence based on the user’s query. Avoid old-style, literary, or overly formal Kannada.
+1. **Kannada Translation** – Provide the correct modern, everyday Kannada word or sentence.
+2. **Transliteration** – Show the Kannada sentence using English phonetics.
+3. **Meaning/Context** – Explain the meaning in simple terms using user's input language.
+4. **Example Sentence** – Include a realistic, locally used sentence in Kannada with transliteration and English meaning.
 
-Transliteration – Show the Kannada sentence using English phonetics for easy pronunciation.
-
-Meaning/Context – Explain the meaning in simple terms, ideally using the user’s input language.
-
-Example Sentence – Include a realistic, locally used example sentence in Kannada with transliteration and English meaning.
-
-Your tone must be encouraging, easy to understand, and beginner-friendly. Focus only on helping users learn practical Kannada used in daily life—not classical or textbook-only Kannada.
-
+Be friendly, encouraging, and clear. Do not include overly formal or classical Kannada.
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 
+Always end your response with:
+Powered by WROGN Men Watches | [Buy Now](https://web.lehlah.club/s/gld8o5)
 """
 
-# Function
+# ------------------ Function ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -44,24 +77,30 @@ def get_kannada_response(query):
             ],
             temperature=0.7
         )
-        return response.choices[0].message.content.strip()
+        result = response.choices[0].message.content.strip()
+        result += "\n\n---\nDeveloped by **SuperAI labs**"
+        return result
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# App UI
-st.title("🗣️ Learn Kannada")
-st.markdown("##### Your friendly assistant to learn practical Kannada.")
+# ------------------ App Body ------------------
+query = st.text_area(
+    "💬 What would you like to learn in Kannada?",
+    placeholder="E.g., How do I say 'Where is the train station?' in Kannada?",
+    height=140
+)
 
-query = st.text_area("💬 Ask your question in any language", placeholder="E.g., How do I say 'I’m hungry' in Kannada?")
-
-if st.button("🔍 Translate"):
+if st.button("🔍 Get Kannada Translation"):
     if query.strip():
-        with st.spinner("Translating..."):
-            result = get_kannada_response(query)
-        st.markdown("### ✅ Kannada Response")
-        st.markdown(result)
+        with st.spinner("Translating and formatting your answer..."):
+            response = get_kannada_response(query)
+        st.markdown("### ✅ Your Kannada Learning Result")
+        st.markdown(response)
     else:
         st.warning("⚠️ Please enter a valid question.")
 
-st.markdown("---")
-st.markdown("<center><small>✨ Made with ❤️ Developed by SuperAI labs 🤖 to help you speak Kannada like a local!</small></center>", unsafe_allow_html=True)
+# ------------------ Footer ------------------
+st.markdown("""
+---
+<center><small>✨ Made with ❤️ by SuperAI Labs to help you speak Kannada like a local!</small></center>
+""", unsafe_allow_html=True)
