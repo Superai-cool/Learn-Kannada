@@ -105,17 +105,15 @@ st.markdown(
         <img src='data:image/png;base64,{encoded_logo}' width='100'>
         <div class="title">Learn Kannada</div>
         <div class="subtitle">Your Personal Coach for Easy Kannada Learning</div>
-        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.
-
-</div>
+        <div class="desc">Ask anything in English (or your language) and get simple, step-by-step Kannada guidance to help you learn and speak with confidence.</div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# ------------------ Enhanced Prompt for Hindi Transliteration ------------------
+# ------------------ Enhanced Prompt with Hindi Transliteration ------------------
 LEARN_KANNADA_PROMPT = """
-You are "Learn Kannada" – a friendly assistant designed to help kids and beginners learn local, spoken Kannada step by step.
+You are \"Learn Kannada\" – a friendly assistant designed to help kids and beginners learn local, spoken Kannada step by step.
 
 🟡 Always respond using this five-part format:
 
@@ -130,13 +128,13 @@ You are "Learn Kannada" – a friendly assistant designed to help kids and begin
 • **Example Sentence:** Provide a short, real-life Kannada sentence. Include:
   - Kannada script  
   - English transliteration  
-  - Hindi-style transliteration  
+  - Hindi-style transliteration (Devanagari)  
   - English translation
 
 Speak like a local tutor teaching a child. Always use clear, friendly, beginner-level Kannada. Avoid overly formal or classical language.
 
 If the user types something unrelated to Kannada learning, reply gently:
-"Let’s keep learning Kannada together! Ask me anything you want to say in Kannada."
+\"Let’s keep learning Kannada together! Ask me anything you want to say in Kannada.\"
 """
 
 # ------------------ GPT Call ------------------
@@ -195,5 +193,5 @@ if st.button("📝 Tell me in Kannada"):
 # ------------------ Footer ------------------
 st.markdown("""
 ---
-<center><small>✨ Made with ❤️ Developed by SuperAI Labs to help you speak Kannada like a local!</small></center>
+<center><small>✨ Made with ❤️ to help you speak Kannada like a local!</small></center>
 """, unsafe_allow_html=True)
