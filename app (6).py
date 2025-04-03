@@ -40,7 +40,7 @@ st.markdown("""
         align-items: center;
         text-align: center;
         margin-top: 30px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         padding: 0 5%;
     }
     .title {
@@ -51,20 +51,20 @@ st.markdown("""
     .subtitle {
         font-size: 1.1rem;
         font-weight: 500;
-        margin-top: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
     .desc {
         font-size: 1rem;
         max-width: 600px;
-        margin-top: 10px;
-        margin-bottom: 25px;
+        margin: 0 auto 20px;
     }
     .custom-label {
         text-align: center;
         font-size: 1rem;
         font-weight: 500;
-        margin-bottom: 10px;
-        margin-top: -10px;
+        margin-bottom: 12px;
+        margin-top: -5px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -76,7 +76,7 @@ if not api_key:
     st.stop()
 openai.api_key = api_key
 
-# ------------------ Embed Logo ------------------
+# ------------------ Logo as Base64 ------------------
 def image_to_base64(img: Image.Image) -> str:
     buffered = BytesIO()
     img.save(buffered, format="PNG")
@@ -86,6 +86,7 @@ def image_to_base64(img: Image.Image) -> str:
 logo = Image.open("image.png")
 encoded_logo = image_to_base64(logo)
 
+# ------------------ App Header ------------------
 st.markdown(
     f"""
     <div class="centered-container">
@@ -98,7 +99,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ------------------ Prompt Setup ------------------
+# ------------------ Prompt ------------------
 LEARN_KANNADA_PROMPT = """
 You are "Learn Kannada" – a custom GPT designed to help users learn local, conversational Kannada in a clear, friendly, and structured way.
 
@@ -113,7 +114,7 @@ Be friendly, encouraging, and clear. Do not include overly formal or classical K
 If a user asks something unrelated to Kannada learning, gently refuse and remind them to ask only Kannada-related questions.
 """
 
-# ------------------ API Call ------------------
+# ------------------ GPT Call ------------------
 def get_kannada_response(query):
     try:
         response = openai.ChatCompletion.create(
@@ -130,7 +131,7 @@ def get_kannada_response(query):
     except Exception as e:
         return f"❌ OpenAI Error: {e}"
 
-# ------------------ Centered Input Label ------------------
+# ------------------ Centered Input Prompt ------------------
 st.markdown("<div class='custom-label'>💬 What would you like to learn in Kannada?</div>", unsafe_allow_html=True)
 
 query = st.text_area(
@@ -139,7 +140,7 @@ query = st.text_area(
     height=140
 )
 
-# ------------------ Button ------------------
+# ------------------ Submit Button ------------------
 if st.button("🔍 Get Kannada Translation"):
     if query.strip():
         with st.spinner("Translating and formatting your answer..."):
