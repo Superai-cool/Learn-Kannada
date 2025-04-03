@@ -20,13 +20,13 @@ st.markdown("""
     .stButton>button {
         background-color: #4CAF50;
         color: white;
-        font-size: 14px;
+        font-size: 16px;
         border-radius: 10px;
         padding: 10px 24px;
         font-weight: bold;
     }
     .stTextArea textarea {
-        font-size: 16px;
+        font-size: 14px;
         padding: 10px;
         border-radius: 10px;
     }
