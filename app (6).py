@@ -1,25 +1,17 @@
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
+import streamlit as st
+from utils import fetch_users
 
-SHEET_NAME = "EasyReply_Users"
+def login_user(email, password):
+    df = fetch_users()
+    user = df[df['Email'] == email]
+    if not user.empty and user.iloc[0]['Password'] == password:
+        st.session_state.logged_in = True
+        st.session_state.user_name = user.iloc[0]['Name']
+        st.session_state.email = email
+        st.session_state.credits = int(user.iloc[0]['Credits'])
+        return True
+    return False
 
-def connect_sheet():
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("gspread_service_account.json", scope)
-    client = gspread.authorize(creds)
-    sheet = client.open(SHEET_NAME).sheet1
-    return sheet
-
-def fetch_users():
-    sheet = connect_sheet()
-    data = sheet.get_all_records()
-    return pd.DataFrame(data)
-
-def update_credits(email, new_credits):
-    sheet = connect_sheet()
-    users = sheet.get_all_records()
-    for i, user in enumerate(users):
-        if user["Email"] == email:
-            sheet.update_cell(i + 2, 4, new_credits)  # row + 1 (header), col 4 = Credits
-            break
+def logout():
+    for key in ["logged_in", "user_name", "email", "credits"]:
+        st.session_state.pop(key, None)
